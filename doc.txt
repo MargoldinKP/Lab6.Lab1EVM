@@ -1,0 +1,3 @@
+4, black, N, cross, Anton
+2, white, K, hudi, Andrew
+10, purple, S, shorts, Dima

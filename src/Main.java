@@ -1,5 +1,7 @@
-package PACKAGE_NAME;public class Main {
-}
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Scanner;
 
 class Clothing {
     //Поля класса:
@@ -27,6 +29,7 @@ class Clothing {
 public class Main {
     static ArrayList<Clothing> clothingItems = new ArrayList<>();
 
+
     public static void main(String[] args) {
         Scanner in = new Scanner(System.in);
         int variant;
@@ -39,6 +42,7 @@ public class Main {
             System.out.println("6. Отобразить все предметы одежды");
             System.out.println("7. Показать количество предметов одежды");
             System.out.println("8. Перемещение");
+            System.out.println("9. Выбрать файл для записи");
             System.out.println("0. Выйти");
 
             System.out.print("Выберите пункт меню: ");
@@ -50,55 +54,77 @@ public class Main {
             }
             switch (variant) {
                 case 1:
-                    // Добавление предметов одежды в список
-                    System.out.print("Введите количество предметов одежды: ");
-                    int count1;
-                    try{
-                            count1 = Integer.parseInt(in.nextLine());
-                    } catch (NumberFormatException e) {
-                        System.out.println("Неверный ввод "+e);
-                        continue;
-                    }
-
-                    System.out.println("Выберите, куда добавить одежду:");
-                    System.out.println("1. В конец списка");
-                    System.out.println("2. В начало списка");
-
-                    int addToEndOrStart;
+                    System.out.println("Выберите способ добавления одежды:");
+                    System.out.println("1. Вручную");
+                    System.out.println("2. Из файла");
+                    int addMethod;
                     try {
-                        addToEndOrStart = Integer.parseInt(in.nextLine());
+                        addMethod = Integer.parseInt(in.nextLine());
                     } catch (NumberFormatException e) {
-                        System.out.println("Неверный ввод. Добавление в конец списка по умолчанию.");
-                        addToEndOrStart = 1; // По умолчанию добавим в конец списка
+                        System.out.println("Неверный выбор. Добавление вручную по умолчанию.");
+                        addMethod = 1; // По умолчанию добавляем вручную
                     }
 
-                    for (int i = 1; i <= count1; i++) {
-                        // Ввод параметров для каждого предмета одежды
-                        System.out.print("Введите размер: ");
-                        String size = in.nextLine();
-                        System.out.print("Введите цвет: ");
-                        String color = in.nextLine();
-                        System.out.print("Введите брэнд: ");
-                        String brand = in.nextLine();
-                        System.out.print("Введите тип: ");
-                        String type = in.nextLine();
-                        System.out.print("Введите имя владельца: ");
-                        String ownerName = in.nextLine();
-                        Person owner = new Person(ownerName);
-
-                        // Создание нового экземпляра одежды
-                        Clothing clothing = new Clothing(size, color, brand, type, owner);
-
-                        // Выбор, куда добавить одежду
-                        if (addToEndOrStart == 1) {
-                            // Добавление в конец списка
-                            clothingItems.add(clothing);
-                        } else {
-                            // Добавление в начало списка
-                            clothingItems.add(0, clothing);
+                    if (addMethod == 1) {
+                        // Добавление вручную
+                        // Добавление предметов одежды в список
+                        System.out.print("Введите количество предметов одежды: ");
+                        int count1;
+                        try{
+                            count1 = Integer.parseInt(in.nextLine());
+                        } catch (NumberFormatException e) {
+                            System.out.println("Неверный ввод "+e);
+                            continue;
                         }
 
-                        System.out.println("Одежда добавлена в список");
+                        System.out.println("Выберите, куда добавить одежду:");
+                        System.out.println("1. В конец списка");
+                        System.out.println("2. В начало списка");
+
+                        int addToEndOrStart;
+                        try {
+                            addToEndOrStart = Integer.parseInt(in.nextLine());
+                        } catch (NumberFormatException e) {
+                            System.out.println("Неверный ввод. Добавление в конец списка по умолчанию.");
+                            addToEndOrStart = 1; // По умолчанию добавим в конец списка
+                        }
+
+                        for (int i = 1; i <= count1; i++) {
+                            // Ввод параметров для каждого предмета одежды
+                            System.out.print("Введите размер: ");
+                            String size = in.nextLine();
+                            System.out.print("Введите цвет: ");
+                            String color = in.nextLine();
+                            System.out.print("Введите брэнд: ");
+                            String brand = in.nextLine();
+                            System.out.print("Введите тип: ");
+                            String type = in.nextLine();
+                            System.out.print("Введите имя владельца: ");
+                            String ownerName = in.nextLine();
+                            Person owner = new Person(ownerName);
+
+                            // Создание нового экземпляра одежды
+                            Clothing clothing = new Clothing(size, color, brand, type, owner);
+
+                            // Выбор, куда добавить одежду
+                            if (addToEndOrStart == 1) {
+                                // Добавление в конец списка
+                                clothingItems.add(clothing);
+                            } else {
+                                // Добавление в начало списка
+                                clothingItems.add(0, clothing);
+                            }
+
+                            System.out.println("Одежда добавлена в список");
+                        }
+                    } else if (addMethod == 2) {
+                        System.out.print("Введите имя файла для загрузки данных: ");
+                        String loadFileName = in.nextLine();
+                        loadFromFile(loadFileName);
+                        System.out.println("Данные загружены из файла: " + loadFileName);
+                    } else {
+                        System.out.println("Неверный выбор. Добавление вручную по умолчанию.");
+break;
                     }
                     break;
 
@@ -295,7 +321,41 @@ public class Main {
                         System.out.println("Список одежды пуст");
                     }
                     break;
+                case 9:
+                    System.out.print("Введите имя файла (с расширением): ");
+                    String fileName = in.nextLine();
+                    saveToFile(fileName);
+                    System.out.println("Данные сохранены в файл: " + fileName);
+                    break;
+                case 0:
+                    System.out.println("Программа завершена. Данные сохранены в файле.");
+                    System.exit(0);
             }
+        }
+    }
+    // Метод для сохранения данных в файл
+    private static void saveToFile(String fileName) {
+        try (PrintWriter writer = new PrintWriter(new FileWriter(fileName))) {
+            for (Clothing item : clothingItems) {
+                writer.println(item);
+            }
+        } catch (IOException e) {
+            System.out.println("Ошибка при сохранении данных в файл.");
+            e.printStackTrace();
+        }
+    }
+    // Метод для загрузки данных из файла
+    private static void loadFromFile(String fileName) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(", ");
+                Clothing clothing = new Clothing(parts[0], parts[1], parts[2], parts[3], new Person(parts[4]));
+                clothingItems.add(clothing);
+            }
+        } catch (IOException e) {
+            System.out.println("Ошибка при загрузке данных из файла.");
+            e.printStackTrace();
         }
     }
 }
